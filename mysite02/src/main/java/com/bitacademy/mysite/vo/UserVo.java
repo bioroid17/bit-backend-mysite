@@ -1,16 +1,16 @@
 package com.bitacademy.mysite.vo;
 
 public class UserVo {
-	private int no;
+	private Long no;
 	private String name;
 	private String email;
 	private String password;
 	private String gender;
 	private String joinDate;
-	public int getNo() {
+	public Long getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(Long no) {
 		this.no = no;
 	}
 	public String getName() {

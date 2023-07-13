@@ -65,7 +65,7 @@ public class UserDao {
 
 			if (rs.next()) {
 				authUser = new UserVo();
-				authUser.setNo(Integer.parseInt(rs.getString(1)));
+				authUser.setNo(rs.getLong(1));
 				authUser.setName(rs.getString(2));
 			}
 		} catch (ClassNotFoundException e) {
@@ -75,6 +75,12 @@ public class UserDao {
 		}
 
 		return authUser;
+	}
+	
+	public UserVo findByNo(Long no) {
+		UserVo vo = null;
+		
+		return vo;
 	}
 
 	private Connection getConnection() throws ClassNotFoundException, SQLException {
