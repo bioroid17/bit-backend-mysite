@@ -91,6 +91,26 @@ public class UserController extends HttpServlet {
 			request
 			.getRequestDispatcher("/WEB-INF/views/user/updateform.jsp")
 			.forward(request, response);
+		} else if("update".equals(actionName)) {
+			// Access Control
+			///////////////////////////////////////////////////////////////
+			HttpSession session = request.getSession();
+			UserVo authUser = (UserVo) session.getAttribute("authUser");
+			if(authUser == null) {
+				// 로그인하지 않고 회원정보수정 페이지 접근 시도
+				response.sendRedirect(request.getContextPath());
+				return;
+			}
+			///////////////////////////////////////////////////////////////
+			UserVo userVo = new UserVo();
+			userVo.setNo(Long.parseLong(request.getParameter("no")));
+			userVo.setName(request.getParameter("name"));
+			userVo.setPassword(request.getParameter("password"));
+			userVo.setGender(request.getParameter("gender"));
+			
+			new UserDao().update(userVo);
+			
+			response.sendRedirect(request.getContextPath() + "/user?a=updateform");
 		}
 	}
 

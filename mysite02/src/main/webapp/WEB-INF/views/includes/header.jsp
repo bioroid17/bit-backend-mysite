@@ -18,7 +18,7 @@
 		%>
 		<li><a href="<%=request.getContextPath() %>/user?a=updateform">회원정보수정</a><li>
 		<li><a href="<%=request.getContextPath() %>/user?a=logout">로그아웃</a><li>
-		<li>이정훈님 안녕하세요 ^^;</li>
+		<li><%=authUser.getName() %> 안녕하세요 ^^;</li>
 		<%
 			}
 		%>

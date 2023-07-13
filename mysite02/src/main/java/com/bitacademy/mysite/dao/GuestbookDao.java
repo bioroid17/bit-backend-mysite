@@ -17,10 +17,7 @@ public class GuestbookDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
+			conn = getConnection();
 
 			String sql = "insert into guestbook values (null, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
@@ -54,23 +51,17 @@ public class GuestbookDao {
 	}
 
 	public void delete(String no) {
-		boolean result = false;
-
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
+			conn = getConnection();
 
 			String sql = "delete from guestbook where no=?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, no);
 			
-			int count = pstmt.executeUpdate();
-			result = count == 1;
+			pstmt.executeUpdate();
 
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
@@ -97,10 +88,7 @@ public class GuestbookDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-
-			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
+			conn = getConnection();
 
 			String sql = "select password from guestbook where no=?";
 			pstmt = conn.prepareStatement(sql);
@@ -108,8 +96,6 @@ public class GuestbookDao {
 			pstmt.setString(1, no);
 			
 			rs = pstmt.executeQuery();
-			
-			String passwd;
 			
 			if(rs.next()) {
 				if (password.equals(rs.getString(1))) {
@@ -148,12 +134,9 @@ public class GuestbookDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
+			conn = getConnection();
 
-			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
-
-			String sql = "select no, name, message, reg_date from guestbook";
+			String sql = "select no, name, message, reg_date from guestbook order by no desc";
 			pstmt = conn.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
@@ -194,5 +177,16 @@ public class GuestbookDao {
 		}
 
 		return result;
+	}
+
+	private Connection getConnection() throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+
+		Class.forName("org.mariadb.jdbc.Driver");
+
+		String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
+		conn = DriverManager.getConnection(url, "webdb", "webdb");
+
+		return conn;
 	}
 }
