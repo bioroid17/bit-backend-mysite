@@ -57,7 +57,7 @@
 						<td>안대혁</td>
 						<td>3</td>
 						<td>2015-09-25 07:24:32</td>
-						<td><a href="" class="del">삭제</a></td>
+						<td><a href="${pageContext.request.contextPath }/board?a=deleteform" class="del">삭제</a></td>
 					</tr>
 				</table>
 				
@@ -65,9 +65,9 @@
 				<div class="pager">
 					<ul>
 						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
+						<li><a href="/mysite02/board?p=1">1</a></li>
 						<li class="selected">2</li>
-						<li><a href="">3</a></li>
+						<li><a href="/mysite02/board?p=3">3</a></li>
 						<li>4</li>
 						<li>5</li>
 						<li><a href="">▶</a></li>
@@ -76,13 +76,13 @@
 				<!-- pager 추가 -->
 				
 				<div class="bottom">
-					<a href="" id="new-book">글쓰기</a>
+					<c:if test="${not empty authUser }">
+						<a href="${pageContext.request.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+					</c:if>
 				</div>				
 			</div>
 		</div>
-		<c:import url="/WEB-INF/views/includes/navigation.jsp">
-			<c:param name="menu" value="board"/>
-		</c:import>
+		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>
 		<c:import url="/WEB-INF/views/includes/footer.jsp"/>
 	</div>
 </body>
