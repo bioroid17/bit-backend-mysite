@@ -114,6 +114,20 @@ public class UserDao {
 			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
+		} finally {
+			try {
+				if( rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return authUser;
@@ -143,8 +157,67 @@ public class UserDao {
 			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
+		} finally {
+			try {
+				if( rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return userVo;
+	}
+	
+	public Boolean checkPassword(String no, String password) {
+		System.out.println(no);
+		boolean equal = false;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = getConnection();
+			String sql = "select password(?)=(select password from user where no=?) from user where no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, password);
+			pstmt.setString(2, no);
+			pstmt.setString(3, no);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				if(rs.getInt(1) == 1) {
+					equal = true;
+				}
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} catch (SQLException e) {
+			System.out.println("Error:" + e);
+		} finally {
+			try {
+				if( rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return equal;
 	}
 
 	private Connection getConnection() throws ClassNotFoundException, SQLException {

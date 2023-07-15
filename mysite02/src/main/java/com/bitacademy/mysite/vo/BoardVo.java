@@ -11,6 +11,7 @@ public class BoardVo {
 	private Long depth;
 	private Long userNo;
 	private String userName;
+	private Long rownum;
 	public Long getNo() {
 		return no;
 	}
@@ -70,5 +71,11 @@ public class BoardVo {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public Long getRownum() {
+		return rownum;
+	}
+	public void setRownum(Long rownum) {
+		this.rownum = rownum;
 	}
 }

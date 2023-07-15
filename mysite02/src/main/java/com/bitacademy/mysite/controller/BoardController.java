@@ -1,7 +1,6 @@
 package com.bitacademy.mysite.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.bitacademy.mysite.dao.BoardDao;
+import com.bitacademy.mysite.dao.UserDao;
 import com.bitacademy.mysite.vo.BoardVo;
 import com.bitacademy.mysite.vo.UserVo;
 
@@ -17,15 +17,15 @@ public class BoardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8");
 		String actionName = request.getParameter("a");
 		
 		BoardDao dao = new BoardDao();
 		
 		if("writeform".equals(actionName)) {
-			UserVo user = (UserVo) request.getSession().getAttribute("authUser");
 			// Access Control
 			///////////////////////////////////////////////////////////////
+			UserVo user = (UserVo) request.getSession().getAttribute("authUser");
 			if(user == null) {
 				response.sendRedirect(request.getContextPath() + "/board");
 				return;
@@ -49,23 +49,73 @@ public class BoardController extends HttpServlet {
 
 			response.sendRedirect(request.getContextPath() + "/board");
 		} else if("updateform".equals(actionName)) {
+			Long no = Long.parseLong(request.getParameter("no"));
+			BoardVo vo = dao.getArticle(no);
+			// Access Control
+			///////////////////////////////////////////////////////////////
+			UserVo user = (UserVo) request.getSession().getAttribute("authUser");
+			if(user == null || user.getNo() != vo.getUserNo()) {
+				response.sendRedirect(request.getContextPath() + "/board");
+				return;
+			}
+			///////////////////////////////////////////////////////////////
+			request.setAttribute("vo", vo);
+			request.setAttribute("no", no);
 
 			request.getRequestDispatcher("/WEB-INF/views/board/updateform.jsp").forward(request, response);
 		} else if("update".equals(actionName)) {
+			BoardVo vo = new BoardVo();
+			Long no = Long.parseLong(request.getParameter("no"));
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			
+			vo.setNo(no);
+			vo.setTitle(title);
+			vo.setContent(content);
+			
+			dao.update(vo);
 
 			response.sendRedirect(request.getContextPath() + "/board");
 		} else if("deleteform".equals(actionName)) {
-
+			Long no = Long.parseLong(request.getParameter("no"));
+			BoardVo vo = dao.getArticle(no);
+			// Access Control
+			///////////////////////////////////////////////////////////////
+			UserVo user = (UserVo) request.getSession().getAttribute("authUser");
+			if(user == null || user.getNo() != vo.getUserNo()) {
+				response.sendRedirect(request.getContextPath() + "/board");
+				return;
+			}
+			///////////////////////////////////////////////////////////////
+			String status = request.getParameter("status");
+			
+			request.setAttribute("no", no);
+			request.setAttribute("userNo", vo.getUserNo());
+			request.setAttribute("status", status);
 			request.getRequestDispatcher("/WEB-INF/views/board/deleteform.jsp").forward(request, response);
 		} else if("delete".equals(actionName)) {
-
-			response.sendRedirect(request.getContextPath() + "/board");
-		} else if("view".equals(actionName)) {
 			String no = request.getParameter("no");
+			String userNo = request.getParameter("userNo");
+			String password = request.getParameter("password");
+			
+			boolean equal = new UserDao().checkPassword(userNo, password);
+			if (equal) {
+				dao.delete(no);
+				response.sendRedirect(request.getContextPath() + "/board");
+				return;
+			} else {
+				response.sendRedirect(request.getContextPath() + "/board?a=deleteform&no="+no+"&status=fail");
+				return;
+			}
+
+		} else if("view".equals(actionName)) {
+			Long no = Long.parseLong(request.getParameter("no"));
 			
 			BoardVo vo = dao.getArticle(no);
+			dao.plusHit(no);
 			
 			request.setAttribute("vo", vo);
+			request.setAttribute("no", no);
 
 			request.getRequestDispatcher("/WEB-INF/views/board/view.jsp").forward(request, response);
 		} else {
@@ -74,27 +124,28 @@ public class BoardController extends HttpServlet {
 			Long pageBlock = 5L;
 			Long pageSize = 10L;
 			
-			String pageNum = null;
-			Long count = dao.getCount();
+			String p = null;	// page번호
+			Long articleCount = dao.getCount();
 			Long startNo = 0L;
 			Long endNo = 0L;
 			
+			// paging 계산 용도
 			Long currentPage = 0L;
 			Long pageCount = 0L;
 			Long startPage = 0L;
 			Long endPage = 0L;
 			
-			if(pageNum == null) { 
-				pageNum = "1";
+			if(p == null) { 
+				p = "1";
 			}
-			currentPage = Long.parseLong(pageNum);
+			currentPage = Long.parseLong(p);
 			startNo = (currentPage - 1) * pageSize + 1;
 			endNo = startNo + pageSize - 1;
-			if (endNo > count) {
-				endNo = count;
+			if (endNo > articleCount) {
+				endNo = articleCount;
 			}
 			
-			pageCount = (count / pageSize) + (count % pageSize == 0 ? 0L : 1L);
+			pageCount = (articleCount / pageSize) + (articleCount % pageSize == 0 ? 0L : 1L);
 			startPage = (currentPage / pageBlock) * pageBlock + 1;
 			if(currentPage % pageBlock == 0) {
 				startPage -= pageBlock;
@@ -106,6 +157,12 @@ public class BoardController extends HttpServlet {
 
 			List<BoardVo> list = dao.getArticles(startNo, endNo);
 			request.setAttribute("list", list);
+			
+			request.setAttribute("startNo", startNo);
+			request.setAttribute("endNo", endNo);
+			request.setAttribute("currentPage", currentPage);
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
 			
 			request.getRequestDispatcher("/WEB-INF/views/board/list.jsp").forward(request, response);
 		}

@@ -27,50 +27,44 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>				
-					<tr>
-						<td>3</td>
-						<td style="text-align:left; padding-left:${0*20}px;">
-							<a href="">세 번째 글입니다.</a>
-						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-11 12:04:20</td>
-						<td><a href="" class="del">삭제</a></td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td style="text-align:left; padding-left:${1*20}px;">
-							<img src="">
-							<a href="">두 번째 글입니다.</a>
-						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-10-02 12:04:12</td>
-						<td><a href="" class="del">삭제</a></td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td style="text-align:left; padding-left:${2*20}px;">
-							<a href="">첫 번째 글입니다.</a>
-						</td>
-						<td>안대혁</td>
-						<td>3</td>
-						<td>2015-09-25 07:24:32</td>
-						<td><a href="${pageContext.request.contextPath }/board?a=deleteform" class="del">삭제</a></td>
-					</tr>
+					<c:forEach items="${list }" var="vo" varStatus="status">
+						<tr>
+							<td>${vo.rownum }</td>
+							<td style="text-align:left; padding-left:${vo.depth*20}px;">
+								<a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }">${vo.title }</a>
+							</td>
+							<td>${vo.userName }</td>
+							<td>${vo.hit }</td>
+							<td>${vo.regDate }</td>
+							<td>
+								<c:if test="${vo.userNo == authUser.no }">
+									<a href="${pageContext.request.contextPath }/board?a=deleteform&no=${vo.no }" class="del">삭제</a>
+								</c:if>
+							</td>
+						</tr>
+					</c:forEach>
 				</table>
 				
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="/mysite02/board?p=1">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="/mysite02/board?p=3">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+						<c:if test="${startPage > pageBlock }">
+							<li><a href="${pageContext.request.contextPath }/board?startPage=${startPage - pageBlock}">◀</a></li>
+						</c:if>
+						<c:forEach var="i" begin="${startPage }" end="${endPage }">
+							<c:choose>
+								<c:when test="${currentPage == i }">
+									<li><a href="${pageContext.request.contextPath }/board?p=${i}">${i }</a></li>
+								</c:when>
+								<c:otherwise>
+									<li class="selected">${i }</li>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+						<c:if test="${pageCount > endPage }">
+							<li><a href="${pageContext.request.contextPath }/board?startPage=${startPage + pageBlock}">▶</a></li>
+						</c:if>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->

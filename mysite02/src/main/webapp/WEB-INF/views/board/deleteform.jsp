@@ -14,14 +14,18 @@
 	<div id="container">
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
-			<div id="guestbook" class="delete-form">
+			<div id="board" class="delete-form">
 				<form method="post" action="${pageContext.request.contextPath }/board">
 					<input type="hidden" name="a" value="delete">
 					<input type='hidden' name="no" value="${no }">
+					<input type='hidden' name="userNo" value="${userNo }">
 					<label>비밀번호</label>
 					<input type="password" name="password">
 					<input type="submit" value="확인">
 				</form>
+				<c:if test="${status == 'fail' }">
+					<pre>비밀번호가 틀렸습니다.</pre>
+				</c:if>
 				<a href="${pageContext.request.contextPath }/board">게시판 메인으로</a>
 			</div>
 		</div>

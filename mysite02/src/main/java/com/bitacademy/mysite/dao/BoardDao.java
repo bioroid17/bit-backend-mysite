@@ -11,6 +11,39 @@ import java.util.List;
 import com.bitacademy.mysite.vo.BoardVo;
 
 public class BoardDao {
+	public Boolean plusHit(Long no) {
+		boolean result = false;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+
+			String sql = "update board set hit=hit+1 where no=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, no);
+			
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		} catch (SQLException e) {
+			System.out.println("Error:" + e);
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 
 	public Boolean delete(String no) {
 		boolean result = false;
@@ -20,8 +53,12 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 
-			String sql = "";
+			String sql = "delete from board where no=?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, no);
+			
+			int count = pstmt.executeUpdate();
+			result = count == 1;
 
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
@@ -111,8 +148,14 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 
-			String sql = "";
+			String sql = "update board set title=?, content=? where no=?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContent());
+			pstmt.setLong(3, vo.getNo());
+			
+			int count = pstmt.executeUpdate();
+			result = count == 1;
 
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패:" + e);
@@ -133,7 +176,7 @@ public class BoardDao {
 		return result;
 	}
 
-	public BoardVo getArticle(String no) {
+	public BoardVo getArticle(Long no) {
 		BoardVo vo = new BoardVo();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -141,13 +184,16 @@ public class BoardDao {
 		try {
 			conn = getConnection();
 
-			String sql = "";
+			String sql = "select title, content, user_no from board where no=?";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, no);
 
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-
+				vo.setTitle(rs.getString(1));
+				vo.setContent(rs.getString(2));
+				vo.setUserNo(rs.getLong(3));
 			}
 
 		} catch (ClassNotFoundException e) {
@@ -178,12 +224,18 @@ public class BoardDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		try {
+		try { 
 			conn = getConnection();
 
-			String sql = "select b.no, b.title, a.name, b.hit, b.reg_date, b.group_no, b.order_no, b.depth "
-					+ "from user a, board b where a.no=b.user_no order by b.group_no desc, b.order_no asc";
+			String sql = "select tb.no, tb.title, tb.name, tb.user_no, tb.hit, tb.reg_date, tb.group_no, tb.order_no, tb.depth, tb.rn "
+					+ "from (select c.no, c.title, c.name, c.user_no, c.hit, c.reg_date, c.group_no, c.order_no, c.depth, @ROWNUM:=@ROWNUM+1 as rn "
+					+ "from (select b.no, b.title, a.name, a.no user_no, b.hit, b.reg_date, b.group_no, b.order_no, b.depth "
+					+ "from user a, board b where a.no=b.user_no order by b.group_no desc, b.order_no asc) c "
+					+ "inner join (SELECT @ROWNUM:=0) r) tb "
+					+ "where tb.rn between ? and ? order by tb.rn desc";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, startNo);
+			pstmt.setLong(2, endNo);
 
 			rs = pstmt.executeQuery();
 
@@ -191,21 +243,25 @@ public class BoardDao {
 				Long no = rs.getLong(1);
 				String title = rs.getString(2);
 				String userName = rs.getString(3);
-				Long hit = rs.getLong(4);
-				String regDate = rs.getString(5);
-				Long groupNo = rs.getLong(6);
-				Long orderNo = rs.getLong(7);
-				Long depth = rs.getLong(8);
+				Long userNo = rs.getLong(4);
+				Long hit = rs.getLong(5);
+				String regDate = rs.getString(6);
+				Long groupNo = rs.getLong(7);
+				Long orderNo = rs.getLong(8);
+				Long depth = rs.getLong(9);
+				Long rownum = rs.getLong(10);
 
 				BoardVo vo = new BoardVo();
 				vo.setNo(no);
 				vo.setTitle(title);
 				vo.setUserName(userName);
+				vo.setUserNo(userNo);
 				vo.setHit(hit);
 				vo.setRegDate(regDate);
 				vo.setGroupNo(groupNo);
 				vo.setOrderNo(orderNo);
 				vo.setDepth(depth);
+				vo.setRownum(rownum);
 
 				result.add(vo);
 			}
