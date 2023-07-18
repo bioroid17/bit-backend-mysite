@@ -31,7 +31,10 @@
 					<c:forEach items="${list }" var="vo" varStatus="status">
 						<tr>
 							<td>${vo.rownum }</td>
-							<td style="text-align:left; padding-left:${vo.depth*20}px;">
+							<td style="text-align:left; padding-left:${vo.depth*10}px;">
+							<c:if test="${vo.depth > 0 }">
+								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">
+							</c:if>
 								<a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>

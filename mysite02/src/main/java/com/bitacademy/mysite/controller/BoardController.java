@@ -113,8 +113,8 @@ public class BoardController extends HttpServlet {
 			child.setUserNo(userNo);
 			
 			dao.reply(child);
-			
 
+			response.sendRedirect(request.getContextPath() + "/board");
 		} else if("deleteform".equals(actionName)) {
 			Long no = Long.parseLong(request.getParameter("no"));
 			BoardVo vo = dao.getArticle(no);
