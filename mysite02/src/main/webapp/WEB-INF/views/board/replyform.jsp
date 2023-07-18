@@ -15,9 +15,10 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board" class="board-form">
+			
 				<table class="tbl-ex">
 					<tr>
-						<th colspan="2">글보기</th>
+						<th colspan="2">글 내용</th>
 					</tr>
 					<tr>
 						<td class="label">제목</td>
@@ -32,15 +33,30 @@
 						</td>
 					</tr>
 				</table>
-				<div class="bottom">
-					<a href="${pageContext.request.contextPath }/board">글목록</a>
-					<c:if test="${vo.userNo == authUser.no }">
-						<a href="${pageContext.request.contextPath }/board?a=updateform&no=${no }">글수정</a>
-					</c:if>
-					<c:if test="${not empty authUser }">
-						<a href="${pageContext.request.contextPath }/board?a=replyform&no=${no }">답글</a>
-					</c:if>
-				</div>
+				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board">
+				<input type="hidden" name="a" value="reply">
+				<input type="hidden" name="no" value="${no }">
+				<input type="hidden" name="userNo" value="${authUser.no }">
+					<table class="tbl-ex">
+						<tr>
+							<th colspan="2">답글</th>
+						</tr>
+						<tr>
+							<td class="label">제목</td>
+							<td><input type="text" name="title" value=""></td>
+						</tr>
+						<tr>
+							<td class="label">내용</td>
+							<td>
+								<textarea id="content" name="content"></textarea>
+							</td>
+						</tr>
+					</table>
+					<div class="bottom">
+						<a href="${pageContext.request.contextPath }/board">취소</a>
+						<input type="submit" value="답글 달기">
+					</div>
+				</form>				
 			</div>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>

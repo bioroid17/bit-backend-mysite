@@ -18,7 +18,7 @@
 				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board">
 				<input type="hidden" name="a" value="update">
 				<input type="hidden" name="no" value="${no }">
-				<input type="hidden" name="userNo" value="${no }">
+				<input type="hidden" name="userNo" value="${authUser.no }">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글수정</th>

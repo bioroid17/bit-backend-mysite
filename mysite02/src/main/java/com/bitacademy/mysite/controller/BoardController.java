@@ -76,6 +76,45 @@ public class BoardController extends HttpServlet {
 			dao.update(vo);
 
 			response.sendRedirect(request.getContextPath() + "/board");
+		} else if("replyform".equals(actionName)) {
+			Long no = Long.parseLong(request.getParameter("no"));
+			BoardVo vo = dao.getArticle(no);
+			// Access Control
+			///////////////////////////////////////////////////////////////
+			if(request.getSession().getAttribute("authUser") == null) {
+				response.sendRedirect(request.getContextPath() + "/board");
+				return;
+			}
+			///////////////////////////////////////////////////////////////
+			request.setAttribute("vo", vo);
+			request.setAttribute("no", no);
+			
+			request.getRequestDispatcher("/WEB-INF/views/board/replyform.jsp").forward(request, response);
+			
+		} else if("reply".equals(actionName)) {
+			Long no = Long.parseLong(request.getParameter("no"));
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			UserVo user = (UserVo) request.getSession().getAttribute("authUser");
+			Long userNo = user.getNo();
+			
+			BoardVo parent = dao.getArticle(no);
+			
+			Long groupNo = parent.getGroupNo();
+			Long orderNo = parent.getOrderNo()+1;
+			Long depth = parent.getDepth()+1;
+			
+			BoardVo child = new BoardVo();
+			child.setTitle(title);
+			child.setContent(content);
+			child.setGroupNo(groupNo);
+			child.setOrderNo(orderNo);
+			child.setDepth(depth);
+			child.setUserNo(userNo);
+			
+			dao.reply(child);
+			
+
 		} else if("deleteform".equals(actionName)) {
 			Long no = Long.parseLong(request.getParameter("no"));
 			BoardVo vo = dao.getArticle(no);
