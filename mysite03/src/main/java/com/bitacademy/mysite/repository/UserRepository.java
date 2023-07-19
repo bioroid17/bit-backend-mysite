@@ -136,6 +136,10 @@ public class UserRepository {
 		return authUser;
 	}
 	
+	public UserVo findByEmailAndPassword(UserVo vo) {
+		return findByEmailAndPassword(vo.getEmail(), vo.getPassword());
+	}
+	
 	public UserVo findByNo(Long no) {
 		UserVo userVo = null;
 		Connection conn = null;
