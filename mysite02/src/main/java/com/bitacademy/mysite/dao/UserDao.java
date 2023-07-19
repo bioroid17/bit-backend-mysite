@@ -28,8 +28,6 @@ public class UserDao {
 			int count = pstmt.executeUpdate();
 			
 			result = count == 1;
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -72,8 +70,6 @@ public class UserDao {
 			}
 
 			pstmt.executeUpdate();
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -110,8 +106,6 @@ public class UserDao {
 				authUser.setNo(rs.getLong(1));
 				authUser.setName(rs.getString(2));
 			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -153,8 +147,6 @@ public class UserDao {
 				userVo.setEmail(rs.getString(3));
 				userVo.setGender(rs.getString(4));
 			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -197,8 +189,6 @@ public class UserDao {
 				}
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -220,14 +210,17 @@ public class UserDao {
 		return equal;
 	}
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
+	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 
-		Class.forName("org.mariadb.jdbc.Driver");
-
-		String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-		conn = DriverManager.getConnection(url, "webdb", "webdb");
-
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+	
+			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
+			conn = DriverManager.getConnection(url, "webdb", "webdb");
+		}  catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		}
 		return conn;
 	}
 }

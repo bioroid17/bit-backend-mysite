@@ -26,8 +26,6 @@ public class BoardDao {
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -60,8 +58,6 @@ public class BoardDao {
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -118,8 +114,6 @@ public class BoardDao {
 			int count = pstmt.executeUpdate();
 
 			result = count == 1;
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -157,8 +151,6 @@ public class BoardDao {
 			int count = pstmt.executeUpdate();
 			result = count == 1;
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -208,8 +200,6 @@ public class BoardDao {
 
 			count = pstmt.executeUpdate();
 			result = count == 1;
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -250,8 +240,6 @@ public class BoardDao {
 				vo.setDepth(rs.getLong(6));
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -319,8 +307,6 @@ public class BoardDao {
 				result.add(vo);
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -360,8 +346,6 @@ public class BoardDao {
 				count = rs.getLong(1);
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -382,14 +366,17 @@ public class BoardDao {
 		return count;
 	}
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
+	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 
-		Class.forName("org.mariadb.jdbc.Driver");
-
-		String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-		conn = DriverManager.getConnection(url, "webdb", "webdb");
-
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+	
+			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
+			conn = DriverManager.getConnection(url, "webdb", "webdb");
+		}  catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		}
 		return conn;
 	}
 }
