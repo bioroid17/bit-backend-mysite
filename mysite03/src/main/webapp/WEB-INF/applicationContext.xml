@@ -14,7 +14,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="com.bitacademy.mysite.service, com.bitacademy.mysite.repository">
+	<context:component-scan base-package="com.bitacademy.mysite.service, com.bitacademy.mysite.repository, com.bitacademy.mysite.exception">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Repository" />
 		<context:include-filter type="annotation"
