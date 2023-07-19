@@ -43,7 +43,6 @@ public class UserController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String login(HttpSession session, UserVo vo, Model model) {
-		System.out.println(vo);
 		UserVo authUser = userService.getUser(vo);
 		
 		if(authUser == null) {
@@ -98,6 +97,6 @@ public class UserController {
 		
 		authUser.setName(vo.getName());
 		
-		return "user/update";
+		return "redirect:/user/update";
 	}
 }

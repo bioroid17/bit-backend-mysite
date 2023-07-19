@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Repository;
 
+import com.bitacademy.mysite.exception.UserRepositoryException;
 import com.bitacademy.mysite.vo.UserVo;
 
 @Repository
@@ -31,8 +32,6 @@ public class UserRepository {
 			int count = pstmt.executeUpdate();
 			
 			result = count == 1;
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -75,8 +74,6 @@ public class UserRepository {
 			}
 
 			pstmt.executeUpdate();
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -113,8 +110,6 @@ public class UserRepository {
 				authUser.setNo(rs.getLong(1));
 				authUser.setName(rs.getString(2));
 			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -160,10 +155,8 @@ public class UserRepository {
 				userVo.setEmail(rs.getString(3));
 				userVo.setGender(rs.getString(4));
 			}
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
-			System.out.println("Error:" + e);
+			throw new UserRepositoryException(e.toString());
 		} finally {
 			try {
 				if( rs != null) {
@@ -204,8 +197,6 @@ public class UserRepository {
 				}
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e);
 		} finally {
@@ -227,14 +218,17 @@ public class UserRepository {
 		return equal;
 	}
 
-	private Connection getConnection() throws ClassNotFoundException, SQLException {
+	private Connection getConnection() throws SQLException {
 		Connection conn = null;
 
-		Class.forName("org.mariadb.jdbc.Driver");
-
-		String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
-		conn = DriverManager.getConnection(url, "webdb", "webdb");
-
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+	
+			String url = "jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8";
+			conn = DriverManager.getConnection(url, "webdb", "webdb");
+		}  catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패:" + e);
+		}
 		return conn;
 	}
 }
