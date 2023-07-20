@@ -33,9 +33,7 @@
 						</td>
 					</tr>
 				</table>
-				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board">
-				<input type="hidden" name="a" value="reply">
-				<input type="hidden" name="no" value="${no }">
+				<form class="board-form" method="post" action="${pageContext.request.contextPath }/board/reply/${no}">
 				<input type="hidden" name="userNo" value="${authUser.no }">
 					<table class="tbl-ex">
 						<tr>

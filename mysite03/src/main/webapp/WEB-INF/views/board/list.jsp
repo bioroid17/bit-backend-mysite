@@ -31,15 +31,18 @@
 					<c:forEach items="${list }" var="vo" varStatus="status">
 						<tr>
 							<td>${vo.rownum }</td>
-							<td style="text-align:left; padding-left:${vo.depth*20}px;">
-								<a href="${pageContext.request.contextPath }/board?a=view&no=${vo.no }">${vo.title }</a>
+							<td style="text-align:left; padding-left:${vo.depth*10}px;">
+							<c:if test="${vo.depth > 0 }">
+								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">
+							</c:if>
+								<a href="${pageContext.request.contextPath }/board/view/${vo.no }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
 							<td>${vo.regDate }</td>
 							<td>
 								<c:if test="${vo.userNo == authUser.no }">
-									<a href="${pageContext.request.contextPath }/board?a=deleteform&no=${vo.no }" class="del">삭제</a>
+									<a href="${pageContext.request.contextPath }/board/delete/${vo.no }" class="del">삭제</a>
 								</c:if>
 							</td>
 						</tr>
@@ -71,7 +74,7 @@
 				
 				<div class="bottom">
 					<c:if test="${not empty authUser }">
-						<a href="${pageContext.request.contextPath }/board?a=writeform" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath }/board/write" id="new-book">글쓰기</a>
 					</c:if>
 				</div>				
 			</div>

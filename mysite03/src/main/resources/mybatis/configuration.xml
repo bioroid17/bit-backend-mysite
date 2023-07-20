@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 관행 상 alias는 소문자로 작성한다. -->
+	<typeAliases>
+		<typeAlias type="com.bitacademy.mysite.vo.BoardVo" alias="boardvo"/>
+		<typeAlias type="com.bitacademy.mysite.vo.GuestbookVo" alias="guestbookvo"/>
+		<typeAlias type="com.bitacademy.mysite.vo.UserVo" alias="uservo"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/mappers/board.xml" />
+		<mapper resource="mybatis/mappers/guestbook.xml" />
+		<mapper resource="mybatis/mappers/user.xml" />
+	</mappers>
+</configuration>
