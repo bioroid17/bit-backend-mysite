@@ -1,5 +1,8 @@
 package com.bitacademy.mysite.security;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -18,7 +21,10 @@ public class AuthUserHandlerMethodArgumentResolver implements HandlerMethodArgum
 			return WebArgumentResolver.UNRESOLVED;
 		}
 		
-		return null;
+		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+		HttpSession session = request.getSession();
+		
+		return session.getAttribute("authUser");
 	}
 
 	@Override
