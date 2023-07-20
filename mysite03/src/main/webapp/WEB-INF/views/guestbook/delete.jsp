@@ -15,14 +15,16 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="guestbook" class="delete-form">
-				<form method="post" action="${pageContext.request.contextPath }/guestbook">
-					<input type="hidden" name="a" value="delete">
+				<form method="post" action="${pageContext.request.contextPath }/guestbook/delete">
 					<input type='hidden' name="no" value="${no }">
 					<label>비밀번호</label>
 					<input type="password" name="password">
 					<input type="submit" value="확인">
 				</form>
-				<a href="${pageContext.request.contextPath }/guestbook">방명록 리스트</a>
+				<c:if test="${not empty status }">
+					<span>${status }</span>
+				</c:if>
+				<a href="${pageContext.request.contextPath }/guestbook/list">방명록 리스트</a>
 			</div>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp"/>

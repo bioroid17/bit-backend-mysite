@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.bitacademy.mysite.vo.GuestbookVo;
 
+@Repository
 public class GuestbookRepository {
 	public boolean insert(GuestbookVo vo) {
 		boolean result = false;
@@ -19,7 +22,7 @@ public class GuestbookRepository {
 		try {
 			conn = getConnection();
 
-			String sql = "insert into guestbook values (null, ?, ?, ?, ?)";
+			String sql = "insert into guestbook values (null, ?, ?, ?, now())";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, vo.getName());
@@ -94,9 +97,7 @@ public class GuestbookRepository {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				if (password.equals(rs.getString(1))) {
-					result = true;
-				}
+				result = password.equals(rs.getString(1));
 			}
 			
 
