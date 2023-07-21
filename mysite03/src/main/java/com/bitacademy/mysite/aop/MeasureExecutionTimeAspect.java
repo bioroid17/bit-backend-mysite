@@ -9,7 +9,7 @@ import org.springframework.util.StopWatch;
 @Component
 @Aspect
 public class MeasureExecutionTimeAspect {
-	
+	// ||로 AOP를 적용할 패키지, 메소드 등을 여럿 지정할 수 있다.
 	@Around("execution(* *..*.repository.*.*(..)) || execution(* *..*.service.*.*(..)) || execution(* *..*.controller.*.*(..))")
 	public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
 		// before
