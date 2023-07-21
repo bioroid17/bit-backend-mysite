@@ -48,6 +48,13 @@
 		    </exclusions>		
 		</dependency>
 		
+		<!-- Spring Aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
 		<!-- spring jdbc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -98,13 +105,6 @@
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-classic</artifactId>
 		    <version>1.2.11</version>
-		</dependency>
-		
-		<!-- Spring Aspect -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
-			<version>${org.springframework-version}</version>
 		</dependency>
 	</dependencies>
 
