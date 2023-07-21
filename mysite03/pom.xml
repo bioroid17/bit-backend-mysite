@@ -40,6 +40,12 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
+		    <exclusions>
+				<exclusion>
+				    <groupId>org.springframework</groupId>
+				    <artifactId>spring-jcl</artifactId>
+				</exclusion>
+		    </exclusions>		
 		</dependency>
 		
 		<!-- spring jdbc -->
@@ -80,6 +86,25 @@
 		    <groupId>jstl</groupId>
 		    <artifactId>jstl</artifactId>
 		    <version>1.2</version>
+		</dependency>
+		
+		<!-- Logback -->
+		<dependency>                                    
+		   <groupId>org.slf4j</groupId>                
+		   <artifactId>jcl-over-slf4j</artifactId>     
+		   <version>1.7.36</version>  
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.2.11</version>
+		</dependency>
+		
+		<!-- Spring Aspect -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${org.springframework-version}</version>
 		</dependency>
 	</dependencies>
 

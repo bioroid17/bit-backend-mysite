@@ -11,6 +11,8 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<!-- auto proxy. 없으면 프락시가 안 만들어져서 AOP 못 씀 -->
+	<aop:aspectj-autoproxy/>
 
 	<!--
 	validator 등록,
