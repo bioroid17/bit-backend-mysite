@@ -13,7 +13,7 @@ public class DBConfig {
 	public DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName("org.mariadb.jdbc.Driver");
-		dataSource.setUrl("jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8\"");
+		dataSource.setUrl("jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8");
 		dataSource.setUsername("webdb");
 		dataSource.setPassword("webdb");
 		dataSource.setInitialSize(0);
