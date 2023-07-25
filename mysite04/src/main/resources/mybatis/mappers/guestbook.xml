@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="guestbook">
+
+	<select id="findAll" resultType="guestbookvo">
+		<![CDATA[
+		select no, name, message, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as regDate
+		from guestbook
+		order by reg_date desc
+		]]>
+	</select>
+
+	<select id="checkPassword" parameterType="String" resultType="String">
+		<![CDATA[
+		select password from guestbook where no=#{no }
+		]]>
+	</select>
+	
+	<insert id="insert" parameterType="guestbookvo">
+		<![CDATA[
+		insert into guestbook values (null, #{name }, #{password }, #{message }, now())
+		]]>
+	</insert>
+	
+	<delete id="delete" parameterType="String">
+		<![CDATA[
+		delete from guestbook where no=#{no }
+		]]>
+	</delete>
+
+</mapper>
