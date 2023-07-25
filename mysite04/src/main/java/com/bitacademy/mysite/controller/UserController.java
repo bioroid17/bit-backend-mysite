@@ -61,6 +61,18 @@ public class UserController {
 		return "redirect:/user/update";
 	}
 
+	// Java config에서 /user/auth 매핑을 위해 필요하다.
+	@RequestMapping("/auth")
+	public void auth() {
+		
+	}
+
+	// Java config에서 /user/logout 매핑을 위해 필요하다.
+	@RequestMapping("/logout")
+	public void logout() {
+		
+	}
+
 //	@ExceptionHandler(Exception.class)
 //	public String exceptionHandler(Exception ex) {
 //		return "error/exception";
