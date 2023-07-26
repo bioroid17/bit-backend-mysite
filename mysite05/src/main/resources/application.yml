@@ -10,9 +10,15 @@ spring:
 
    # mvc
    mvc:
+      static-path-pattern: /assets/**
+      throw-exception-if-no-handler-found: true
       view:
          prefix: /WEB-INF/views/
          suffix: .jsp
+   
+   web:
+      resources:
+         static-locations: classpath:/assets/
 
    # aop
    aop:
@@ -40,4 +46,21 @@ server:
       encoding:
          charset: utf-8
          enabled: true
-         
+
+# logging
+logging:
+   pattern:
+      file: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
+      console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
+   logback:
+      rollingpolicy:
+         file-name-pattern: /${spring.application.name}-logs/exception.%i.log.zip
+         max-file-size: 200MB
+         max-history: 10
+   file: /${spring.application.name}-logs/exception.log
+   level:
+      root: INFO
+      com:
+         bitacademy:
+            mysite:
+               exception: ERROR
