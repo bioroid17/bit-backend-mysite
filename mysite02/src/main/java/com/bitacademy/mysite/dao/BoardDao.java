@@ -269,10 +269,10 @@ public class BoardDao {
 		try { 
 			conn = getConnection();
 
-			String sql = "select t.no, t.title, t.name, t.user_no, t.hit, t.reg_date, t.group_no, t.order_no, t.depth, t.rn "
+			String sql = "select t.no, t.title, t.name, t.user_no, t.hit, t.reg_date, t.group_no, t.order_no, t.depth "
 					+ "from (select c.no, c.title, c.name, c.user_no, c.hit, c.reg_date, c.group_no, c.order_no, c.depth, @ROWNUM:=@ROWNUM+1 as rn "
 					+ "from (select b.no, b.title, a.name, b.user_no, b.hit, b.reg_date, b.group_no, b.order_no, b.depth "
-					+ "from user a, board b, (SELECT @ROWNUM:=0) r where a.no=b.user_no order by b.group_no asc, b.order_no desc) c order by rn desc) t "
+					+ "from user a, board b, (SELECT @ROWNUM:=0) r where a.no=b.user_no order by b.group_no desc, b.order_no asc) c) t "
 					+ "where t.rn between ? and ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, startNo);
@@ -290,7 +290,6 @@ public class BoardDao {
 				Long groupNo = rs.getLong(7);
 				Long orderNo = rs.getLong(8);
 				Long depth = rs.getLong(9);
-				Long rownum = rs.getLong(10);
 
 				BoardVo vo = new BoardVo();
 				vo.setNo(no);
@@ -302,7 +301,6 @@ public class BoardDao {
 				vo.setGroupNo(groupNo);
 				vo.setOrderNo(orderNo);
 				vo.setDepth(depth);
-				vo.setRownum(rownum);
 
 				result.add(vo);
 			}

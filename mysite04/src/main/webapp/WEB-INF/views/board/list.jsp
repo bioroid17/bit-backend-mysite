@@ -30,12 +30,13 @@
 					</tr>
 					<c:forEach items="${list }" var="vo" varStatus="status">
 						<tr>
-							<td>${vo.rownum }</td>
+							<td>${number }</td>
+							<c:set var="number" value="${number - 1}"/>
 							<td style="text-align:left; padding-left:${vo.depth*10}px;">
 							<c:if test="${vo.depth > 0 }">
 								<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">
 							</c:if>
-								<a href="${pageContext.request.contextPath }/board/view/${vo.no }">${vo.title }</a>
+								<a href="${pageContext.request.contextPath }/board/view/${vo.no }?p=${currentPage }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
@@ -53,11 +54,11 @@
 				<div class="pager">
 					<ul>
 						<c:if test="${startPage > pageBlock }">
-							<li><a href="${pageContext.request.contextPath }/board?startPage=${startPage - pageBlock}">◀</a></li>
+							<li><a href="${pageContext.request.contextPath }/board?p=${startPage - pageBlock}">◀</a></li>
 						</c:if>
 						<c:forEach var="i" begin="${startPage }" end="${endPage }">
 							<c:choose>
-								<c:when test="${currentPage == i }">
+								<c:when test="${currentPage != i }">
 									<li><a href="${pageContext.request.contextPath }/board?p=${i}">${i }</a></li>
 								</c:when>
 								<c:otherwise>
@@ -66,7 +67,7 @@
 							</c:choose>
 						</c:forEach>
 						<c:if test="${pageCount > endPage }">
-							<li><a href="${pageContext.request.contextPath }/board?startPage=${startPage + pageBlock}">▶</a></li>
+							<li><a href="${pageContext.request.contextPath }/board?p=${startPage + pageBlock}">▶</a></li>
 						</c:if>
 					</ul>
 				</div>					

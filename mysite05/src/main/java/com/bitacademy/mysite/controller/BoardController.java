@@ -20,11 +20,11 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@RequestMapping("/{p}")
-	public String list(Model model, @PathVariable("p") String p) {
+	@RequestMapping("")
+	public String list(Model model, String p) {
 		/* default action */
 		
-		Long pageBlock = 5L;
+		Long pageBlock = 2L;
 		Long pageSize = 5L;
 		
 		Long articleCount = boardService.getNumOfArticles();
@@ -66,17 +66,20 @@ public class BoardController {
 		model.addAttribute("startNo", startNo);
 		model.addAttribute("endNo", endNo);
 		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("pageBlock", pageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		return "board/list";
 	}
 
 	@RequestMapping("/view/{no}")
-	public String view(@PathVariable("no") Long no, Model model) {
+	public String view(@PathVariable("no") Long no, String p, Model model) {
 		
 		BoardVo vo = boardService.getOneArticle(no);
 		boardService.hitUp(no);
-		
+
+		model.addAttribute("p", p);
 		model.addAttribute("vo", vo);
 		model.addAttribute("no", no);
 		

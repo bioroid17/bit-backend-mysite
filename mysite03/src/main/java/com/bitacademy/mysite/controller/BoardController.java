@@ -19,18 +19,18 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
-	
-	@RequestMapping("")
-	public String list(Model model) {
+
+	@RequestMapping(value="", method=RequestMethod.GET)
+	public String list(Model model, String p) {
 		/* default action */
 		
-		Long pageBlock = 5L;
-		Long pageSize = 10L;
+		Long pageBlock = 2L;
+		Long pageSize = 5L;
 		
-		String p = null;	// page번호
 		Long articleCount = boardService.getNumOfArticles();
 		Long startNo = 0L;
 		Long endNo = 0L;
+		Long number = 0L;
 		
 		// paging 계산 용도
 		Long currentPage = 0L;
@@ -48,6 +48,8 @@ public class BoardController {
 			endNo = articleCount;
 		}
 		
+		number = articleCount - (currentPage - 1) * pageSize;
+		
 		pageCount = (articleCount / pageSize) + (articleCount % pageSize == 0 ? 0L : 1L);
 		startPage = (currentPage / pageBlock) * pageBlock + 1;
 		if(currentPage % pageBlock == 0) {
@@ -60,20 +62,24 @@ public class BoardController {
 
 		List<BoardVo> list = boardService.getArticleList(startNo, endNo);
 		model.addAttribute("list", list);
+		model.addAttribute("number", number);
 		model.addAttribute("startNo", startNo);
 		model.addAttribute("endNo", endNo);
 		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("pageBlock", pageBlock);
 		model.addAttribute("startPage", startPage);
 		model.addAttribute("endPage", endPage);
 		return "board/list";
 	}
 
 	@RequestMapping("/view/{no}")
-	public String view(@PathVariable("no") Long no, Model model) {
+	public String view(@PathVariable("no") Long no, String p, Model model) {
 		
 		BoardVo vo = boardService.getOneArticle(no);
 		boardService.hitUp(no);
 		
+		model.addAttribute("p", p);
 		model.addAttribute("vo", vo);
 		model.addAttribute("no", no);
 		

@@ -148,11 +148,13 @@ public class BoardController extends HttpServlet {
 			}
 
 		} else if("view".equals(actionName)) {
+			String p = request.getParameter("p");
 			Long no = Long.parseLong(request.getParameter("no"));
 			
 			BoardVo vo = dao.getArticle(no);
 			dao.plusHit(no);
 			
+			request.setAttribute("p", p);
 			request.setAttribute("vo", vo);
 			request.setAttribute("no", no);
 
@@ -160,13 +162,14 @@ public class BoardController extends HttpServlet {
 		} else {
 			/* default action */
 			
-			Long pageBlock = 5L;
-			Long pageSize = 10L;
+			Long pageBlock = 2L;
+			Long pageSize = 5L;
 			
 			String p = null;	// page번호
 			Long articleCount = dao.getCount();
 			Long startNo = 0L;
 			Long endNo = 0L;
+			Long number = 0L;
 			
 			// paging 계산 용도
 			Long currentPage = 0L;
@@ -174,6 +177,7 @@ public class BoardController extends HttpServlet {
 			Long startPage = 0L;
 			Long endPage = 0L;
 			
+			p = request.getParameter("p");
 			if(p == null) { 
 				p = "1";
 			}
@@ -183,6 +187,8 @@ public class BoardController extends HttpServlet {
 			if (endNo > articleCount) {
 				endNo = articleCount;
 			}
+
+			number = articleCount - (currentPage - 1) * pageSize;
 			
 			pageCount = (articleCount / pageSize) + (articleCount % pageSize == 0 ? 0L : 1L);
 			startPage = (currentPage / pageBlock) * pageBlock + 1;
@@ -196,10 +202,12 @@ public class BoardController extends HttpServlet {
 
 			List<BoardVo> list = dao.getArticles(startNo, endNo);
 			request.setAttribute("list", list);
-			
+			request.setAttribute("number", number);
 			request.setAttribute("startNo", startNo);
 			request.setAttribute("endNo", endNo);
 			request.setAttribute("currentPage", currentPage);
+			request.setAttribute("pageCount", pageCount);
+			request.setAttribute("pageBlock", pageBlock);
 			request.setAttribute("startPage", startPage);
 			request.setAttribute("endPage", endPage);
 			

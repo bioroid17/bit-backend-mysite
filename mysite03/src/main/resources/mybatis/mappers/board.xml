@@ -23,10 +23,10 @@
 	<select id="getArticles" parameterType="map" resultType="boardvo">
 		<![CDATA[
 		select t.no, t.title, t.name as userName, t.user_no as userNo, t.hit, t.reg_date as regDate,
-			t.group_no as groupNo, t.order_no as orderNo, t.depth, t.rownum
+			t.group_no as groupNo, t.order_no as orderNo, t.depth
 		from (select c.no, c.title, c.name, c.user_no, c.hit, c.reg_date, c.group_no, c.order_no, c.depth, @ROWNUM:=@ROWNUM+1 as rownum
 		from (select b.no, b.title, a.name, b.user_no, b.hit, b.reg_date, b.group_no, b.order_no, b.depth
-		from user a, board b, (SELECT @ROWNUM:=0) r where a.no=b.user_no order by b.group_no asc, b.order_no desc) c order by rownum desc) t
+		from user a, board b, (SELECT @ROWNUM:=0) r where a.no=b.user_no order by b.group_no desc, b.order_no asc) c) t
 		where t.rownum between #{startNo } and #{endNo}
 		]]>
 	</select>
