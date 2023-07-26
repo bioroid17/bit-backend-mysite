@@ -1,0 +1,43 @@
+# spring configuration
+spring:
+   application:
+      name: mysite05
+
+   #devtools - live reload
+   devtools:
+      livereload:
+         enabled: true
+
+   # mvc
+   mvc:
+      view:
+         prefix: /WEB-INF/views/
+         suffix: .jsp
+
+   # aop
+   aop:
+      auto: true
+      proxy-target-class: true
+
+   datasource:
+      driver-class-name: org.mariadb.jdbc.Driver
+      url: jdbc:mariadb://192.168.0.162:3306/webdb?charset=utf8
+      username: webdb
+      password: webdb
+      hikari:
+         minimum-idle: 10
+         maximum-pool: 20
+
+# mybatis
+mybatis:
+   config-location: classpath:mybatis/configuration.xml
+
+# server
+server:
+   port: 8080
+   servlet:
+      context-path: /mysite05
+      encoding:
+         charset: utf-8
+         enabled: true
+         
